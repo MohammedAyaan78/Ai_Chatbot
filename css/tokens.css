@@ -1,0 +1,89 @@
+/**
+ * tokens.css – NeuralChat Unified Design Tokens
+ * 
+ * Strict Single-Source Color System:
+ * - Dark theme is default in :root
+ * - Light theme overrides under [data-theme="light"]
+ * - All components across landing page and chat page reference these variables.
+ */
+
+:root {
+  /* ── COLOR TOKENS (DARK DEFAULT) ── */
+  --bg: #070B1A;
+  --bg-elev: #0F1730;
+  --panel: #0C1228;
+  --panel-glass: rgba(12, 18, 40, 0.75);
+  --border: rgba(255, 255, 255, 0.10);
+  --border-focus: rgba(34, 211, 238, 0.50);
+  --text: #F2F6FF;
+  --text-muted: #9AA8C7;
+  
+  --primary: #22D3EE;
+  --secondary: #8B5CF6;
+  --accent: #F472B6;
+  
+  --user-bubble: linear-gradient(135deg, #22D3EE, #8B5CF6);
+  --user-text: #06101F;
+  --bot-bubble: #16213F;
+  --bot-border: rgba(255, 255, 255, 0.08);
+
+  /* Functional Status */
+  --success: #10B981;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+
+  /* ── TYPOGRAPHY ── */
+  --font-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+  --font-emoji: 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+  /* ── SHADOWS ── */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.45);
+  --shadow-glow: 0 0 24px rgba(34, 211, 238, 0.25);
+
+  /* ── RADII ── */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-full: 9999px;
+
+  /* ── TRANSITIONS ── */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ── SPACING & SIZING ── */
+  --header-height: 64px;
+  --max-content-width: 1200px;
+  --chat-max-width: 880px;
+}
+
+/* ── LIGHT THEME OVERRIDES ── */
+[data-theme="light"] {
+  --bg: #F4F7FD;
+  --bg-elev: #FFFFFF;
+  --panel: #FFFFFF;
+  --panel-glass: rgba(255, 255, 255, 0.85);
+  --border: rgba(15, 23, 42, 0.12);
+  --border-focus: rgba(8, 145, 178, 0.50);
+  --text: #0F172A;
+  --text-muted: #51607F;
+
+  --primary: #0891B2;
+  --secondary: #6D28D9;
+  --accent: #DB2777;
+
+  --user-bubble: linear-gradient(135deg, #0891B2, #6D28D9);
+  --user-text: #FFFFFF;
+  --bot-bubble: #E8EEFB;
+  --bot-border: rgba(15, 23, 42, 0.08);
+
+  --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 16px 40px rgba(15, 23, 42, 0.12);
+  --shadow-glow: 0 0 20px rgba(8, 145, 178, 0.18);
+}

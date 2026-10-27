@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="NeuralChat – Real rule-based NLP AI Chatbot with tokenization, stemming, TF-IDF cosine similarity, and Levenshtein fuzzy matching." />
+  <meta name="keywords" content="AI chatbot, NLP, natural language processing, machine learning, tokenization, TF-IDF, Three.js" />
+  <meta name="theme-color" content="#070B1A" />
+  <title>NeuralChat – AI Chatbot | Real NLP Engine</title>
+
+  <!-- Instant Theme Execution (Prevents Flash of Wrong Theme) -->
+  <script>
+    (function() {
+      try {
+        var params = new URLSearchParams(window.location.search);
+        var urlTheme = params.get('theme');
+        if (urlTheme === 'dark' || urlTheme === 'light') {
+          localStorage.setItem('neuralchat_theme', urlTheme);
+          document.documentElement.setAttribute('data-theme', urlTheme);
+          return;
+        }
+        var saved = localStorage.getItem('neuralchat_theme');
+        var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {}
+    })();
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- CSS Architecture -->
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/landing.css" />
+
+  <!-- Three.js Import Map for ES Modules -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+
+  <!-- Landing Bootstrap -->
+  <script type="module" src="js/landing.js"></script>
+</head>
+<body>
+  <!-- Accessible Skip Link -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Navigation Bar -->
+  <header class="landing-nav" role="banner">
+    <a href="index.html" class="brand" aria-label="NeuralChat Home">
+      <span class="brand__orb" aria-hidden="true"></span>
+      <span>NeuralChat</span>
+    </a>
+
+    <nav class="nav-links" aria-label="Main Navigation">
+      <a href="#how-it-works" class="nav-link">How it works</a>
+      <a href="#features" class="nav-link">Features</a>
+      <a href="chat.html" class="nav-link">Chat</a>
+
+      <!-- Theme Toggle -->
+      <button id="theme-btn" class="icon-btn" aria-label="Toggle light or dark theme" title="Toggle theme">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+      </button>
+
+      <a href="chat.html" class="btn btn--primary" style="padding: 0.5rem 1.1rem; font-size: 0.88rem;">Open Chat</a>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <!-- 3D Hero Section -->
+    <section id="hero" class="hero" aria-label="Neural Core Interactive 3D Visualization">
+      <canvas id="hero-canvas" aria-hidden="true"></canvas>
+      <div class="hero-vignette" aria-hidden="true"></div>
+
+      <!-- WebGL Fallback -->
+      <div id="webgl-fallback" class="webgl-fallback" aria-hidden="true" hidden>
+        <div class="css-orb"></div>
+      </div>
+
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="hero-badge__dot" aria-hidden="true"></span>
+          <span>AI-Powered NLP Engine</span>
+        </div>
+
+        <h1 class="hero-title">
+          <span>Meet </span><span class="hero-title__accent">NeuralChat</span>
+        </h1>
+
+        <p class="hero-subtitle">
+          An interactive AI companion demonstrating genuine Natural Language Processing:
+          tokenization, rule-based stemming, TF-IDF cosine relevance, and typo-tolerant fuzzy matching.
+        </p>
+
+        <div class="hero-actions">
+          <a href="chat.html" class="btn btn--primary" id="hero-start-chat">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            Start Chatting
+          </a>
+          <a href="#how-it-works" class="btn btn--ghost">
+            Learn NLP
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M5 12h14M12 5l7 7-7 7"></path>
+            </svg>
+          </a>
+        </div>
+
+        <!-- Suggestion Chips linking directly to chat deep links -->
+        <div class="hero-chips" aria-label="Quick questions to ask">
+          <a href="chat.html?q=What%20is%20NLP%3F" class="hero-chip">What is NLP?</a>
+          <a href="chat.html?q=What%20is%20tokenization%3F" class="hero-chip">What is tokenization?</a>
+          <a href="chat.html?q=Tell%20me%20a%20joke" class="hero-chip">Tell me a joke</a>
+          <a href="chat.html?q=What%20is%20TF-IDF%3F" class="hero-chip">What is TF-IDF?</a>
+        </div>
+
+        <!-- Hero Stats Row -->
+        <div class="hero-stats" aria-label="Platform Statistics">
+          <div class="hero-stat">
+            <span class="hero-stat__num">40+</span>
+            <span class="hero-stat__label">Intents</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat__num">TF-IDF</span>
+            <span class="hero-stat__label">Similarity</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat__num">Fuzzy</span>
+            <span class="hero-stat__label">Typo Fix</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works (4-Step NLP Pipeline) -->
+    <section id="how-it-works" class="section reveal" aria-labelledby="pipeline-heading">
+      <div class="section-header">
+        <p class="section-tag">Educational Architecture</p>
+        <h2 id="pipeline-heading" class="section-title">How NeuralChat Understands You</h2>
+        <p>A multi-stage Natural Language Processing pipeline running entirely client-side without external APIs.</p>
+      </div>
+
+      <div class="pipeline-grid">
+        <article class="pipeline-card">
+          <div class="pipeline-step">1</div>
+          <h3>Normalize</h3>
+          <p>Converts input to lowercase, maps common abbreviations and slang, and strips irrelevant punctuation.</p>
+          <div class="pipeline-code">
+            <code>"What IS NLP???" → "what is nlp"</code>
+          </div>
+        </article>
+
+        <article class="pipeline-card">
+          <div class="pipeline-step">2</div>
+          <h3>Tokenize & Stem</h3>
+          <p>Splits raw text into tokens, strips 100+ stop-words, and applies 22 suffix reduction rules to extract root terms.</p>
+          <div class="pipeline-code">
+            <code>["chatting", "quickly"] → ["chat", "quick"]</code>
+          </div>
+        </article>
+
+        <article class="pipeline-card">
+          <div class="pipeline-step">3</div>
+          <h3>Score Relevance</h3>
+          <p>Blends TF-IDF vector cosine angle (40%), Jaccard keyword overlap (40%), and Levenshtein edit distance (20%).</p>
+          <div class="pipeline-code">
+            <code>cos(θ) = (A·B)/(|A|×|B|)</code>
+          </div>
+        </article>
+
+        <article class="pipeline-card">
+          <div class="pipeline-step">4</div>
+          <h3>Contextual Reply</h3>
+          <p>Selects best intent variant, updates session memory (user name, math expressions), and renders response with follow-up chips.</p>
+          <div class="pipeline-code">
+            <code>Intent: what_is_nlp (92% match)</code>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="section reveal" aria-labelledby="features-heading">
+      <div class="section-header">
+        <p class="section-tag">Core Features</p>
+        <h2 id="features-heading" class="section-title">Built for Real-World AI Understanding</h2>
+        <p>Combining classical NLP algorithms with a modern, responsive web experience.</p>
+      </div>
+
+      <div class="features-grid">
+        <article class="feature-card">
+          <div class="feature-icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+            </svg>
+          </div>
+          <h3>TF-IDF & Cosine Similarity</h3>
+          <p>Scores message relevance mathematically based on term frequency and inverse document frequency across training corpora.</p>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+          </div>
+          <h3>Typo Tolerance</h3>
+          <p>Dynamic programming Levenshtein distance handles user typos and spelling mistakes gracefully ("wat is nlpp" → NLP).</p>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            </svg>
+          </div>
+          <h3>38+ Curated Intents</h3>
+          <p>Rich knowledge covering Artificial Intelligence, Deep Learning, NLP algorithms, Python, JS, jokes, and interactive math.</p>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            </svg>
+          </div>
+          <h3>Voice & Speech Synthesis</h3>
+          <p>Listen to responses via Web Speech API and speak your queries hands-free directly in the browser.</p>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+          </div>
+          <h3>100% Client-Side & Private</h3>
+          <p>Zero tracking, zero API keys, and zero telemetry. Everything processes on your device with localStorage persistence.</p>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+              <line x1="8" y1="21" x2="16" y2="21"></line>
+              <line x1="12" y1="17" x2="12" y2="21"></line>
+            </svg>
+          </div>
+          <h3>Dual Python & Web Core</h3>
+          <p>Shares the exact same NLP algorithms with a full-featured terminal CLI application (terminal/chatbot.py).</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Call to Action Band -->
+    <section class="cta-band reveal" aria-labelledby="cta-heading">
+      <h2 id="cta-heading">Ready to Experience Real NLP?</h2>
+      <p>Ask anything about AI concepts, run calculations, or inspect live NLP scoring.</p>
+      <a href="chat.html" class="btn btn--primary" style="font-size: 1.05rem; padding: 0.85rem 2rem;">
+        Launch Dedicated Chat
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </a>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="landing-footer" role="contentinfo">
+    <p><strong>NeuralChat</strong> — Rule-Based NLP AI Chatbot • Task 01 Implementation</p>
+    <p style="margin-top: 0.5rem; font-size: 0.8rem;">Pure HTML5, CSS3, & Vanilla JavaScript ES Modules • No External Backend</p>
+  </footer>
+</body>
+</html>

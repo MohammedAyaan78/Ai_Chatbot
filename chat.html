@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Chat with NeuralChat – An AI companion demonstrating NLP tokenization, stemming, TF-IDF, and fuzzy matching." />
+  <meta name="theme-color" content="#070B1A" />
+  <title>Chat with NeuralChat – AI Chatbot</title>
+
+  <!-- Instant Theme Execution (Prevents Flash of Wrong Theme) -->
+  <script>
+    (function() {
+      try {
+        var params = new URLSearchParams(window.location.search);
+        var urlTheme = params.get('theme');
+        if (urlTheme === 'dark' || urlTheme === 'light') {
+          localStorage.setItem('neuralchat_theme', urlTheme);
+          document.documentElement.setAttribute('data-theme', urlTheme);
+          return;
+        }
+        var saved = localStorage.getItem('neuralchat_theme');
+        var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {}
+    })();
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- CSS Architecture -->
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/chat.css" />
+
+  <!-- Chat Bootstrap Module -->
+  <script type="module" src="js/chat.js"></script>
+</head>
+<body>
+  <!-- Accessible Skip Link -->
+  <a href="#chat-messages" class="skip-link">Skip to conversation</a>
+
+  <div class="chat-app" role="application" aria-label="NeuralChat AI Interface">
+    <!-- Desktop Collapsible Sidebar -->
+    <aside id="chat-sidebar" class="chat-sidebar" aria-label="Suggested Topics and Navigation">
+      <div class="sidebar-header">
+        <a href="index.html" class="brand" aria-label="NeuralChat Home">
+          <span class="brand__orb" aria-hidden="true"></span>
+          <span>NeuralChat</span>
+        </a>
+        <button id="new-chat-btn" class="icon-btn" title="New Chat" aria-label="Start a new chat session">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="sidebar-content">
+        <!-- Category: AI Basics -->
+        <section aria-labelledby="cat-ai">
+          <h2 id="cat-ai" class="sidebar-category-title">AI & ML Basics</h2>
+          <div class="topic-list">
+            <button class="topic-btn" type="button" data-query="What is artificial intelligence?">What is AI?</button>
+            <button class="topic-btn" type="button" data-query="What is machine learning?">Machine Learning</button>
+            <button class="topic-btn" type="button" data-query="Explain deep learning">Deep Learning</button>
+            <button class="topic-btn" type="button" data-query="Supervised vs unsupervised learning">Supervised vs Unsupervised</button>
+          </div>
+        </section>
+
+        <!-- Category: NLP Concepts -->
+        <section aria-labelledby="cat-nlp">
+          <h2 id="cat-nlp" class="sidebar-category-title">NLP Concepts</h2>
+          <div class="topic-list">
+            <button class="topic-btn" type="button" data-query="What is natural language processing?">What is NLP?</button>
+            <button class="topic-btn" type="button" data-query="What is tokenization?">Tokenization</button>
+            <button class="topic-btn" type="button" data-query="What is stemming?">Stemming & Roots</button>
+            <button class="topic-btn" type="button" data-query="What is TF-IDF?">TF-IDF Scoring</button>
+            <button class="topic-btn" type="button" data-query="What is Levenshtein distance?">Levenshtein Distance</button>
+          </div>
+        </section>
+
+        <!-- Category: Coding & Math -->
+        <section aria-labelledby="cat-code">
+          <h2 id="cat-code" class="sidebar-category-title">Coding & Math</h2>
+          <div class="topic-list">
+            <button class="topic-btn" type="button" data-query="Why is Python popular for AI?">Python for AI</button>
+            <button class="topic-btn" type="button" data-query="What is 15 * 4?">Calculate: 15 × 4</button>
+            <button class="topic-btn" type="button" data-query="What is the current time?">Current Time & Date</button>
+          </div>
+        </section>
+
+        <!-- Category: Fun -->
+        <section aria-labelledby="cat-fun">
+          <h2 id="cat-fun" class="sidebar-category-title">Fun & Discovery</h2>
+          <div class="topic-list">
+            <button class="topic-btn" type="button" data-query="Tell me a joke">Tell me a joke</button>
+            <button class="topic-btn" type="button" data-query="Tell me a fun AI fact">AI Fun Fact</button>
+            <button class="topic-btn" type="button" data-query="What can you do?">Bot Capabilities</button>
+          </div>
+        </section>
+      </div>
+    </aside>
+
+    <!-- Main Chat Workspace -->
+    <main class="chat-main">
+      <!-- Chat Header -->
+      <header class="chat-header" role="banner">
+        <div class="header-left">
+          <button id="sidebar-toggle-btn" class="icon-btn sidebar-toggle-btn" aria-label="Toggle sidebar" aria-expanded="true" title="Toggle sidebar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="9" y1="3" x2="9" y2="21"></line>
+            </svg>
+          </button>
+
+          <a href="index.html" class="back-home-link" aria-label="Back to landing page">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+            <span>Home</span>
+          </a>
+
+          <!-- Animated Orb Avatar (CSS Only, pulses while thinking) -->
+          <div id="header-avatar" class="header-avatar" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2zM7.5 13a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm9 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
+            </svg>
+          </div>
+
+          <div class="header-bot-info">
+            <h1 class="header-bot-title">
+              NeuralChat
+              <span class="online-badge" title="Online"></span>
+            </h1>
+            <span class="header-bot-status">Real NLP Engine</span>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <!-- Voice Input Button -->
+          <button id="voice-btn" class="icon-btn" aria-label="Toggle voice input" aria-pressed="false" title="Voice Input" hidden>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+              <line x1="12" y1="19" x2="12" y2="23"></line>
+              <line x1="8" y1="23" x2="16" y2="23"></line>
+            </svg>
+          </button>
+
+          <!-- Text-to-Speech (TTS) Toggle -->
+          <button id="tts-btn" class="icon-btn" aria-label="Toggle text-to-speech audio" aria-pressed="false" title="Text-to-Speech">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            </svg>
+          </button>
+
+          <!-- NLP Insights Toggle -->
+          <button id="insights-btn" class="icon-btn" aria-label="Toggle NLP analysis insights" aria-pressed="false" title="NLP Insights">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+          </button>
+
+          <!-- Theme Toggle -->
+          <button id="theme-btn" class="icon-btn" aria-label="Toggle light or dark theme" title="Toggle theme">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </button>
+
+          <!-- Clear Conversation Button -->
+          <button id="clear-btn" class="icon-btn" aria-label="Clear chat history" title="Clear conversation">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- NLP Insights Floating Panel -->
+      <aside id="insights-panel" class="insights-panel is-hidden" aria-label="Live NLP Engine Insights">
+        <div class="insights-title">
+          <span>NLP Pipeline Inspector</span>
+          <button id="insights-close-btn" class="icon-btn" style="width:24px;height:24px;" aria-label="Close insights">✕</button>
+        </div>
+        <div class="insight-row">
+          <span class="insight-label">Matched Intent:</span>
+          <span id="insight-intent" class="insight-val">—</span>
+        </div>
+        <div class="insight-row">
+          <span class="insight-label">Confidence:</span>
+          <span id="insight-confidence" class="insight-val">—</span>
+        </div>
+        <div class="insight-row">
+          <span class="insight-label">Stemmed Tokens:</span>
+          <span id="insight-tokens" class="insight-val">—</span>
+        </div>
+        <div class="insight-row">
+          <span class="insight-label">Scoring Method:</span>
+          <span id="insight-method" class="insight-val">—</span>
+        </div>
+      </aside>
+
+      <!-- Messages Region (Accessible Live Region) -->
+      <section id="chat-messages" class="chat-messages" aria-live="polite" aria-atomic="false" aria-label="Chat messages history">
+        <!-- Rendered dynamically -->
+      </section>
+
+      <!-- Scroll to bottom button -->
+      <button id="scroll-bottom-btn" class="scroll-bottom-btn" aria-label="Scroll to latest messages" title="Scroll to bottom" hidden>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </button>
+
+      <!-- Suggestion Chips Container -->
+      <nav id="chips-container" class="chips-container" aria-label="Suggested follow-up questions"></nav>
+
+      <!-- Sticky Input Bar -->
+      <div class="chat-input-wrapper">
+        <form id="chat-form" class="chat-input-container">
+          <label for="chat-input" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;">Type your message</label>
+          <textarea
+            id="chat-input"
+            class="chat-input"
+            rows="1"
+            placeholder="Ask anything about AI, NLP, or type 'help'..."
+            maxlength="500"
+            aria-label="Your message"
+          ></textarea>
+          <button type="submit" id="send-btn" class="send-btn" aria-label="Send message" title="Send (Enter)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </form>
+        <div class="input-footer">
+          <span>Press Enter to send, Shift+Enter for new line</span>
+          <span id="char-count">500</span>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
